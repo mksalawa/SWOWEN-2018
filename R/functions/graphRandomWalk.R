@@ -108,6 +108,7 @@ write.table(rw1.pca$x[,1:300], file = './output/SWOW-EN.R1.katz_pca_300.csv', ro
 
 
 # Graph R123 - Katz random walk + PCA
+SWOW.R123           = importDataSWOW(dataFile.SWOWEN,'R123')
 tic()
 G$R123$RW           = weightMatrix(SWOW.R123,'RW',alpha)
 toc()

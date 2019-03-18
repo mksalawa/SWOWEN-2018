@@ -69,7 +69,8 @@ require(igraph)
 
 
 rm(list = ls())
-setwd("/media/simon/Data/Dropbox/Scripts/R/SWOWGIT/SWOWEN-2018/")
+# TODO: set the working directory.
+setwd('/home/USER/workspace/SWOWEN-2018/')
 source('./R/functions/importDataFunctions.R')
 source('./R/functions/networkFunctions.R')
 source('./R/functions/similarityFunctions.R')
@@ -87,13 +88,39 @@ SWOW.R1             = importDataSWOW(dataFile.SWOWEN,'R1')
 
 # Generate the weighted graphs
 G                   = list()
-G$R1$Strength       = weightMatrix(SWOW.R1,'strength')
-G$R1$PPMI           = weightMatrix(SWOW.R1,'PPMI')
+# G$R1$Strength       = weightMatrix(SWOW.R1,'strength')
+# G$R1$PPMI           = weightMatrix(SWOW.R1,'PPMI')
 
+
+# Graph R1 - Katz random walk + PCA
 tic()
 G$R1$RW             = weightMatrix(SWOW.R1,'RW',alpha)
 toc()
+rw1.dense = as.matrix(G$R1$RW)
+write.table(rw1.dense, file = './output/SWOW-EN.R1.katz.csv', row.names = FALSE, sep = '\t', quote = FALSE)
+# Compute PCA of the RW matrix for dimensionality reduction.
+rw1.pca = prcomp(rw1.dense, center = TRUE, scale = TRUE)
+# Save the resulting matrix for future reference.
+write.table(rw1.pca$x, file = './output/SWOW-EN.R1.katz_pca.csv', row.names = TRUE, col.names = FALSE, sep = '\t', quote = FALSE)
+# Pick the first N columns for N-dimensional embeddings, eg. for N = 300:
+write.table(rw1.pca$x[,1:300], file = './output/SWOW-EN.R1.katz_pca_300.csv', row.names = TRUE, col.names = FALSE, sep = '\t', quote = FALSE)
+# NOTE: The multiword expressions might still exist and need a replacement of ' ' to '_'.
+
+
+# Graph R123 - Katz random walk + PCA
+tic()
+G$R123$RW           = weightMatrix(SWOW.R123,'RW',alpha)
+toc()
+rw123.dense = as.matrix(G$R123$RW)
+write.table(rw123.dense, file = './output/SWOW-EN.R123.katz.csv', row.names = FALSE, sep = '\t', quote = FALSE)
+# Compute PCA of the RW matrix for dimensionality reduction.
+rw123.pca = prcomp(rw123.dense, center = TRUE, scale = TRUE)
+# Save the resulting matrix for future reference.
+write.table(rw123.pca$x, file = './output/SWOW-EN.R123.katz_pca.csv', row.names = TRUE, col.names = FALSE, sep = '\t', quote = FALSE)
+# Pick the first N columns for N-dimensional embeddings, eg. for N = 300:
+write.table(rw123.pca$x[,1:300], file = './output/SWOW-EN.R123.katz_pca_300.csv', row.names = TRUE, col.names = FALSE, sep = '\t', quote = FALSE)
+# NOTE: The multiword expressions might still exist and need a replacement of ' ' to '_'.
+
 
 # Compute the cosine similarity matrix
-S = cosineMatrix(G$R1$PPMI)
-
+# S = cosineMatrix(G$R1$PPMI)

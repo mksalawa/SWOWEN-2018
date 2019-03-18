@@ -4,9 +4,10 @@ require(tidyverse)
 
 rm(list = ls())
 
-# Set your working direct
-current_path = getActiveDocumentContext()$path
-setwd(dirname(current_path ))
+# Set your working directory
+# current_path = getActiveDocumentContext()$path
+# TODO: set the working directory.
+setwd('/home/USER/workspace/SWOWEN-2018/')
 message('Current working directory: ', getwd() )
 
 # Determine unknown and missing response tokens
